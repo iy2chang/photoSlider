@@ -103,7 +103,7 @@ class ShowImage extends Component {
           onRequestClose={this.hideModal}
           style={customStyles}
         >
-          <span class="close" onClick={this.hideModal}>
+          <span className="close" onClick={this.hideModal}>
             &times;
           </span>
           <button className="prv" onClick={() => this.pre(currentIndex)}>
