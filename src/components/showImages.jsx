@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { imageUrl } from "../config.json";
 import { getPictures } from "../services/picServices";
 import Modal from "react-modal";
+import { paginate } from "../utils/paginate.js";
+import Pagination from "./pagination";
 
 const customStyles = {
   content: {
@@ -20,7 +22,10 @@ class ShowImage extends Component {
   state = {
     pictures: [],
     currentPhoto: "",
-    currentIndex: 0
+    currentIndex: 0,
+    pageSize: 6,
+    currentPage: 1,
+    show: false
   };
 
   async componentDidMount() {
@@ -81,9 +86,20 @@ class ShowImage extends Component {
     });
   };
 
-  render() {
-    const { pictures, currentPhoto, currentIndex } = this.state;
+  handlePageChange = page => {
+    this.setState({ currentPage: page });
+  };
 
+  render() {
+    const {
+      currentPhoto,
+      currentIndex,
+      pageSize,
+      currentPage,
+      show
+    } = this.state;
+    const totalPictures = this.state.pictures.length;
+    const pictures = paginate(this.state.pictures, currentPage, pageSize);
     return (
       <React.Fragment>
         {pictures.map(p => (
@@ -98,6 +114,7 @@ class ShowImage extends Component {
             onClick={this.handleOpen}
           />
         ))}
+
         <Modal
           isOpen={this.state.show}
           onRequestClose={this.hideModal}
@@ -114,6 +131,13 @@ class ShowImage extends Component {
             &#10095;
           </button>
         </Modal>
+        <Pagination
+          itemsCount={totalPictures}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={this.handlePageChange}
+          showModal={show}
+        />
       </React.Fragment>
     );
   }
